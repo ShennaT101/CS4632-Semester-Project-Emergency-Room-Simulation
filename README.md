@@ -1,55 +1,95 @@
-# Emergency Room Simulation
+# Emergency Room Simulation  
 CS 4632 – Modeling & Simulation  
-Milestone 1 – Project Foundation  
-Author: Shenna Tawiah
-Repository: https://github.com/ShennaT101/CS4632-Semester-Project-Emergency-Room-Simulation
+Author: **Shenna Tawiah**  
+Repository: **https://github.com/ShennaT101/CS4632-Semester-Project-Emergency-Room-Simulation**
 
 ---
 
 ## 📘 Project Overview
-This project simulates patient flow through a hospital Emergency Department (ED).  
-The goal is to analyze how arrival rates, triage priorities, and staffing levels affect:
+This project implements a **Discrete-Event Simulation (DES)** of patient flow through a hospital Emergency Department (ED). The simulation analyzes how arrival rates, triage priorities, staffing levels, and bed availability affect:
 
 - Patient waiting time  
-- Length of stay  
-- Resource utilization  
-- Queue buildup by acuity  
+- Length of stay (LOS)  
+- Resource utilization (doctors, beds)  
+- Queue length by acuity level  
+- Overall system throughput  
 
-This simulation uses a **Discrete-Event Simulation (DES)** model implemented in Java.
+The simulation is written entirely in **Java**, using an event-driven architecture with a priority-based event calendar.
 
 ---
 
 ## 🏥 System Model
+
 ### **Entities**
-- **Patient** – arrival time, acuity, service time  
-- **Triage Nurse** – assigns acuity based on a probability distribution  
-- **Doctor** – provides treatment (server)  
-- **EDQueue** – priority queue ordered by acuity + FIFO  
-- **SimulationEngine** – event loop, calendar, stats
+- **Patient** – attributes: arrival time, service time, ESI acuity level  
+- **Doctor** – server that treats patients  
+- **Bed** – capacity resource for ED  
+- **Triage Nurse** – assigns ESI priority using probability distribution  
+- **EventQueue** – priority queue (future event list)  
+- **SimulationEngine** – handles events, time advancement, statistics  
 
-### **Events**
-- **ArrivalEvent** – patient arrives, triage performed  
-- **ServiceEndEvent** – doctor finishes treating a patient  
+---
 
-### **Core Logic**
-- Poisson arrivals  
-- Exponential service times  
-- Priority scheduling by acuity  
-- Multiple servers (doctors)  
+### **Event Types**
+#### **ArrivalEvent**
+- Generates patient arrivals (Poisson process)  
+- Assigns ESI level  
+- Places patient in priority queue  
+- Triggers next arrival  
+
+#### **ServiceStartEvent**
+- Occurs when doctor + bed become available  
+- Removes patient from waiting queue  
+- Schedules service completion  
+
+#### **ServiceEndEvent**
+- Frees resources  
+- Updates statistics  
+- Starts next patient if queue is non-empty  
 
 ---
 
 ## 🧮 Mathematical Foundations
-- **Arrival process:** Poisson distribution  
-- **Service times:** exponential  
-- **Queue model:** M/M/c with priority classes  
-- **Triage:** categorical probability distribution  
 
-Citations for these models are included in the LaTeX Milestone 1 document.
+| Component | Model |
+|----------|-------|
+| **Arrival process** | Poisson distribution |
+| **Service time** | Exponential distribution |
+| **Queue structure** | M/M/c with 5 priority classes |
+| **Triage process** | Categorical probability distribution |
+| **Scheduling** | Priority queue (lowest ESI = highest priority) |
+
+These foundational models are fully documented and cited in the Milestone 1 LaTeX deliverable.
 
 ---
 
-## 🚀 How to Run
-### **Compile**
-```bash
-javac *.java
+## 📊 Simulation Outputs
+The simulation collects and reports:
+
+### **Per-Acuity Output**
+- Mean wait time  
+- Mean length of stay  
+- Number of patients treated  
+- Queue length distribution  
+
+### **System-Level Output**
+- Total throughput  
+- Doctor utilization  
+- Bed utilization  
+- Overall average wait time  
+- Total number of events processed  
+
+---
+
+## 📐 UML Diagrams  
+UML diagrams are located in the `/docs/` folder:
+
+- `classDiagram.png` – Overall class structure  
+- `sequenceDiagram.png` – Event flow during simulation  
+
+PlantUML source files are included for reproducibility.
+
+---
+
+## 📁 Project Structure
+
