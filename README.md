@@ -1,95 +1,121 @@
 # Emergency Room Simulation  
 CS 4632 – Modeling & Simulation  
-Author: **Shenna Tawiah**  
-Repository: **https://github.com/ShennaT101/CS4632-Semester-Project-Emergency-Room-Simulation**
+Milestone 2 – Code Progress  
+Author: Shenna Tawiah  
+
+Repository: https://github.com/ShennaT101/CS4632-Semester-Project-Emergency-Room-Simulation  
 
 ---
 
-## 📘 Project Overview
-This project implements a **Discrete-Event Simulation (DES)** of patient flow through a hospital Emergency Department (ED). The simulation analyzes how arrival rates, triage priorities, staffing levels, and bed availability affect:
+## 📌 Project Status (Milestone 2)
 
-- Patient waiting time  
-- Length of stay (LOS)  
-- Resource utilization (doctors, beds)  
-- Queue length by acuity level  
-- Overall system throughput  
+### ✅ Implemented So Far
+- Basic Java project structure created
+- Core classes added:
+  - Patient, Doctor, TriageNurse
+  - Event, ArrivalEvent, ServiceEndEvent
+  - EDQueue (priority queue)
+  - SimulationEngine (initial event loop)
+- `.gitignore` and `pom.xml` configured
+- README and documentation structure created
+- Initial progress toward Poisson arrivals and exponential service times
 
-The simulation is written entirely in **Java**, using an event-driven architecture with a priority-based event calendar.
+### 🔧 Still To Come (Milestone 3)
+- Full event scheduling logic
+- Poisson arrival generator
+- Service time distribution
+- Multiple doctors (c-server system)
+- Statistics collection and export
+- Final UML updates
+- Experimentation and results
 
----
-
-## 🏥 System Model
-
-### **Entities**
-- **Patient** – attributes: arrival time, service time, ESI acuity level  
-- **Doctor** – server that treats patients  
-- **Bed** – capacity resource for ED  
-- **Triage Nurse** – assigns ESI priority using probability distribution  
-- **EventQueue** – priority queue (future event list)  
-- **SimulationEngine** – handles events, time advancement, statistics  
-
----
-
-### **Event Types**
-#### **ArrivalEvent**
-- Generates patient arrivals (Poisson process)  
-- Assigns ESI level  
-- Places patient in priority queue  
-- Triggers next arrival  
-
-#### **ServiceStartEvent**
-- Occurs when doctor + bed become available  
-- Removes patient from waiting queue  
-- Schedules service completion  
-
-#### **ServiceEndEvent**
-- Frees resources  
-- Updates statistics  
-- Starts next patient if queue is non-empty  
+### 🔄 Changes Since M1
+- Switched emphasis to Maven project structure in Java
+- Modified class design to fit Java conventions
+- Added explicit event subclasses for clean simulation flow
 
 ---
 
-## 🧮 Mathematical Foundations
+## 🛠 Installation Instructions
 
-| Component | Model |
-|----------|-------|
-| **Arrival process** | Poisson distribution |
-| **Service time** | Exponential distribution |
-| **Queue structure** | M/M/c with 5 priority classes |
-| **Triage process** | Categorical probability distribution |
-| **Scheduling** | Priority queue (lowest ESI = highest priority) |
+### **Requirements**
+- Java 17+
+- Maven 3+
+- IntelliJ IDEA (recommended)
 
-These foundational models are fully documented and cited in the Milestone 1 LaTeX deliverable.
+### **Setup**
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ShennaT101/CS4632-Semester-Project-Emergency-Room-Simulation
+   ```
+2. Open IntelliJ → *Open Project* → select folder  
+3. IntelliJ will automatically import the Maven project
 
----
-
-## 📊 Simulation Outputs
-The simulation collects and reports:
-
-### **Per-Acuity Output**
-- Mean wait time  
-- Mean length of stay  
-- Number of patients treated  
-- Queue length distribution  
-
-### **System-Level Output**
-- Total throughput  
-- Doctor utilization  
-- Bed utilization  
-- Overall average wait time  
-- Total number of events processed  
+### Troubleshooting
+- If `pom.xml` fails to load → File → Invalidate Cache & Restart
+- If Maven does not sync → Click *Reload Maven Project*
 
 ---
 
-## 📐 UML Diagrams  
-UML diagrams are located in the `/docs/` folder:
+## ▶️ Running the Simulation
 
-- `classDiagram.png` – Overall class structure  
-- `sequenceDiagram.png` – Event flow during simulation  
+Compile and run:
 
-PlantUML source files are included for reproducibility.
+```bash
+mvn compile
+mvn exec:java -Dexec.mainClass="er.Main"
+```
+
+or inside IntelliJ:  
+**Right-click Main.java → Run 'Main'**
 
 ---
 
-## 📁 Project Structure
+## 🏗 Architecture Overview
 
+### Components
+- **SimulationEngine** – central event loop  
+- **Event** – abstract class for scheduled actions  
+- **ArrivalEvent / ServiceEndEvent** – main event types  
+- **Patient** – entity with severity and arrival time  
+- **EDQueue** – priority-based queue  
+- **Doctor** – server resource  
+- **TriageNurse** – assigns severity  
+
+### UML Mapping
+- Matches M1 class diagram (Patient, Events, Resources)
+- Expanded for Java conventions (Event subclasses)
+
+---
+
+## 🗂 Project Board
+
+Public project board:  
+**https://github.com/users/ShennaT101/projects/1**
+
+Columns:
+- **To Do** – arrival model, service model, scheduling  
+- **In Progress** – event loop implementation  
+- **Done** – core class structure, repo setup, README
+
+---
+
+## 📸 Simulation Evidence (Screenshots in repo)
+Files located in `/screenshots`:
+- board_overview.png
+- simulation_run1.png
+- simulation_run2.png
+- simulation_run3.png
+
+---
+
+## 📅 Next Steps
+- Complete event dispatcher
+- Implement distribution models
+- Validate performance vs. literature
+- Prepare Milestone 3 full system
+
+---
+
+## 📘 Acknowledgments
+Kennesaw State University — CS 4632 Modeling & Simulation  
