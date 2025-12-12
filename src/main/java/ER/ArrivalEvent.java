@@ -3,6 +3,7 @@ package ER;
 import java.util.Random;
 
 public class ArrivalEvent extends Event {
+
     private static final Random rand = new Random();
 
     public ArrivalEvent(double time) {
@@ -11,7 +12,7 @@ public class ArrivalEvent extends Event {
 
     @Override
     public void execute(SimulationEngine engine) {
-        // Create patient with random severity
+
         int severity = rand.nextInt(5) + 1;
         Patient p = new Patient(severity, time);
 
@@ -20,12 +21,18 @@ public class ArrivalEvent extends Event {
 
         System.out.println("Time " + time + ": Arrival of " + p);
 
-        // If doctor free, schedule immediate service
-        if (!engine.doctor.isBusy()) {
-            engine.doctor.setBusy(true);
-            engine.scheduleEvent(
-                    new ServiceEndEvent(time + engine.generateServiceTime(), p)
-            );
+        // Assign immediately if any doctor is available
+        Doctor freeDoc = engine.getFreeDoctor();
+        if (freeDoc != null) {
+
+            freeDoc.setBusy(true);
+            p.setAssignedDoctor(freeDoc);
+            p.setServiceStartTime(time);
+
+            engine.stats.recordServiceStart(p, time);
+
+            double end = time + engine.generateServiceTime();
+            engine.scheduleEvent(new ServiceEndEvent(end, p));
         }
 
         // schedule next arrival
