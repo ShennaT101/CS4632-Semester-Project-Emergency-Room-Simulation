@@ -1,121 +1,147 @@
-# Emergency Room Simulation  
-CS 4632 – Modeling & Simulation  
-Milestone 2 – Code Progress  
-Author: Shenna Tawiah  
+# 🚑 Emergency Room Simulation  
+### CS4632 – Milestone 2
 
-Repository: https://github.com/ShennaT101/CS4632-Semester-Project-Emergency-Room-Simulation  
+This project implements a **Discrete Event Simulation (DES)** of an Emergency Room (ER).  
+Patients arrive randomly, wait in queues, get assigned to available doctors, receive care, and leave the system.  
+The goal is to model system flow, analyze performance, and evaluate queueing behavior.
 
 ---
 
 ## 📌 Project Status (Milestone 2)
 
-### ✅ Implemented So Far
-- Basic Java project structure created
-- Core classes added:
-  - Patient, Doctor, TriageNurse
-  - Event, ArrivalEvent, ServiceEndEvent
-  - EDQueue (priority queue)
-  - SimulationEngine (initial event loop)
-- `.gitignore` and `pom.xml` configured
-- README and documentation structure created
-- Initial progress toward Poisson arrivals and exponential service times
+### ✔ Implemented So Far
+- Core simulation engine  
+- Event-driven scheduling (priority queue)  
+- Patient and Doctor entity classes  
+- Arrival event processing  
+- Service event processing  
+- Waiting room queue (FIFO)  
+- Time progression based on event clock  
+- Basic statistics tracking:  
+  - patient wait times  
+  - queue lengths  
+  - doctor utilization  
+- Basic console output showing simulation progress
 
-### 🔧 Still To Come (Milestone 3)
-- Full event scheduling logic
-- Poisson arrival generator
-- Service time distribution
-- Multiple doctors (c-server system)
-- Statistics collection and export
-- Final UML updates
-- Experimentation and results
+### 🚧 Still To Come
+- Additional event types (DepartureEvent, TriageEvent, etc.)  
+- More detailed patient behavior (severity levels, service variance)  
+- Configurable parameters via external file or CLI  
+- Extended statistical reporting  
+- Visualization tools (graphs, metrics)  
 
-### 🔄 Changes Since M1
-- Switched emphasis to Maven project structure in Java
-- Modified class design to fit Java conventions
-- Added explicit event subclasses for clean simulation flow
+### 🔄 Changes From Proposal
+- Event classes adjusted to simplify processing  
+- StatsCollector added earlier for easier debugging  
+- Some UML elements streamlined for implementation clarity
 
 ---
 
-## 🛠 Installation Instructions
+## 🔧 Installation & Setup
 
-### **Requirements**
-- Java 17+
-- Maven 3+
-- IntelliJ IDEA (recommended)
+### Requirements
+- **Java 21**  
+- **Maven** (auto-managed by IntelliJ)
 
-### **Setup**
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/ShennaT101/CS4632-Semester-Project-Emergency-Room-Simulation
+### How to Run (IDE)
+1. Open project in IntelliJ  
+2. Navigate to:
    ```
-2. Open IntelliJ → *Open Project* → select folder  
-3. IntelliJ will automatically import the Maven project
+   src/main/java/ER/Main.java
+   ```
+3. Right-click → **Run 'Main'**
 
-### Troubleshooting
-- If `pom.xml` fails to load → File → Invalidate Cache & Restart
-- If Maven does not sync → Click *Reload Maven Project*
-
----
-
-## ▶️ Running the Simulation
-
-Compile and run:
-
-```bash
-mvn compile
-mvn exec:java -Dexec.mainClass="er.Main"
+### How to Run (Terminal)
+```
+mvn clean compile
+mvn exec:java -Dexec.mainClass="ER.Main"
 ```
 
-or inside IntelliJ:  
-**Right-click Main.java → Run 'Main'**
+---
+
+## ▶ Usage
+
+When the simulation runs, it will:
+
+- Generate patients at random arrival intervals  
+- Place waiting patients into a queue  
+- Assign patients to available doctors  
+- Create and process service completion events  
+- Print core statistics at the end  
+
+**Current output includes:**
+- Timestamped event log  
+- Queue size changes  
+- Doctor assignment messages  
+- Summary statistics after simulation ends  
 
 ---
 
 ## 🏗 Architecture Overview
 
-### Components
-- **SimulationEngine** – central event loop  
-- **Event** – abstract class for scheduled actions  
-- **ArrivalEvent / ServiceEndEvent** – main event types  
-- **Patient** – entity with severity and arrival time  
-- **EDQueue** – priority-based queue  
-- **Doctor** – server resource  
-- **TriageNurse** – assigns severity  
+### Core Components
+- **SimulationEngine**  
+  Controls event loop, system clock, and simulation state  
+
+- **Event** (Base class)  
+  - `ArrivalEvent`  
+  - `ServiceEvent`  
+  - (More coming in M3)
+
+- **Entities**  
+  - `Patient`  
+  - `Doctor`
+
+- **Queue Model**  
+  FIFO queue stored in an internal data structure  
+
+- **StatsCollector**  
+  Tracks:
+  - average wait time  
+  - service time  
+  - queue lengths  
+  - doctor utilization  
 
 ### UML Mapping
-- Matches M1 class diagram (Patient, Events, Resources)
-- Expanded for Java conventions (Event subclasses)
+The implemented components map directly to the UML diagrams in the proposal:
+- Event classes → event hierarchy  
+- SimulationEngine → sequence diagram event loop  
+- Entities (Patient, Doctor) → UML class diagram  
+- Queue/Stats modules → system design components  
 
 ---
 
-## 🗂 Project Board
+## 📁 Project Structure
 
-Public project board:  
-**https://github.com/users/ShennaT101/projects/1**
-
-Columns:
-- **To Do** – arrival model, service model, scheduling  
-- **In Progress** – event loop implementation  
-- **Done** – core class structure, repo setup, README
-
----
-
-## 📸 Simulation Evidence (Screenshots in repo)
-Files located in `/screenshots`:
-- board_overview.png
-- simulation_run1.png
-- simulation_run2.png
-- simulation_run3.png
-
----
-
-## 📅 Next Steps
-- Complete event dispatcher
-- Implement distribution models
-- Validate performance vs. literature
-- Prepare Milestone 3 full system
+```
+CS4632-ER/
+│
+├── src/
+│   └── main/java/ER/
+│       ├── ArrivalEvent.java
+│       ├── ServiceEvent.java
+│       ├── Patient.java
+│       ├── Doctor.java
+│       ├── Event.java
+│       ├── SimulationEngine.java
+│       ├── StatsCollector.java
+│       └── Main.java
+│
+├── classdiagram.png
+├── sequencediagram.png
+├── pom.xml
+└── README.md
+```
 
 ---
 
-## 📘 Acknowledgments
-Kennesaw State University — CS 4632 Modeling & Simulation  
+## 🗂 Version Control Notes
+
+This repository demonstrates:
+- Multiple incremental commits  
+- Clear commit messages  
+- Merge conflict resolution (`.gitignore`)  
+- Connected remote branch (`origin/main`)  
+- Organized folder structure  
+
+---
