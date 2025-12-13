@@ -1,147 +1,235 @@
-# 🚑 Emergency Room Simulation  
-### CS4632 – Milestone 2
+# CS 4632 – Emergency Room Simulation
 
-This project implements a **Discrete Event Simulation (DES)** of an Emergency Room (ER).  
-Patients arrive randomly, wait in queues, get assigned to available doctors, receive care, and leave the system.  
-The goal is to model system flow, analyze performance, and evaluate queueing behavior.
+**Modeling and Simulation Final Project**
 
----
+**Author:** Shenna Tawiah
 
-## 📌 Project Status (Milestone 2)
+**Course:** CS 4632 – Modeling and Simulation
 
-### ✔ Implemented So Far
-- Core simulation engine  
-- Event-driven scheduling (priority queue)  
-- Patient and Doctor entity classes  
-- Arrival event processing  
-- Service event processing  
-- Waiting room queue (FIFO)  
-- Time progression based on event clock  
-- Basic statistics tracking:  
-  - patient wait times  
-  - queue lengths  
-  - doctor utilization  
-- Basic console output showing simulation progress
+**Institution:** Kennesaw State University
 
-### 🚧 Still To Come
-- Additional event types (DepartureEvent, TriageEvent, etc.)  
-- More detailed patient behavior (severity levels, service variance)  
-- Configurable parameters via external file or CLI  
-- Extended statistical reporting  
-- Visualization tools (graphs, metrics)  
-
-### 🔄 Changes From Proposal
-- Event classes adjusted to simplify processing  
-- StatsCollector added earlier for easier debugging  
-- Some UML elements streamlined for implementation clarity
+**Semester:** Fall 2025
 
 ---
 
-## 🔧 Installation & Setup
+## 📌 Project Overview
 
-### Requirements
-- **Java 21**  
-- **Maven** (auto-managed by IntelliJ)
+This project implements a **discrete-event simulation** of a hospital **Emergency Room (ER)**. The simulation models patient arrivals, waiting queues, doctor availability, and service times in order to evaluate system performance under varying conditions.
 
-### How to Run (IDE)
-1. Open project in IntelliJ  
-2. Navigate to:
-   ```
-   src/main/java/ER/Main.java
-   ```
-3. Right-click → **Run 'Main'**
-
-### How to Run (Terminal)
-```
-mvn clean compile
-mvn exec:java -Dexec.mainClass="ER.Main"
-```
+The model is **hypothetical** and does not use real hospital data. Its purpose is to demonstrate **simulation design, experimentation, validation, and analysis techniques** as required for the CS 4632 course.
 
 ---
 
-## ▶ Usage
+## 🎯 Project Objectives
 
-When the simulation runs, it will:
+The primary goals of this project are to:
 
-- Generate patients at random arrival intervals  
-- Place waiting patients into a queue  
-- Assign patients to available doctors  
-- Create and process service completion events  
-- Print core statistics at the end  
-
-**Current output includes:**
-- Timestamped event log  
-- Queue size changes  
-- Doctor assignment messages  
-- Summary statistics after simulation ends  
+* Analyze how **arrival rates**, **staffing levels**, and **service times** impact patient waiting times
+* Study **congestion effects** and **doctor utilization**
+* Perform **sensitivity analysis** and **scenario testing**
+* Validate model behavior using **qualitative** and **extreme-condition tests**
+* Demonstrate a **complete simulation workflow** across multiple milestones
 
 ---
 
-## 🏗 Architecture Overview
+## 🧠 Simulation Features
 
-### Core Components
-- **SimulationEngine**  
-  Controls event loop, system clock, and simulation state  
-
-- **Event** (Base class)  
-  - `ArrivalEvent`  
-  - `ServiceEvent`  
-  - (More coming in M3)
-
-- **Entities**  
-  - `Patient`  
-  - `Doctor`
-
-- **Queue Model**  
-  FIFO queue stored in an internal data structure  
-
-- **StatsCollector**  
-  Tracks:
-  - average wait time  
-  - service time  
-  - queue lengths  
-  - doctor utilization  
-
-### UML Mapping
-The implemented components map directly to the UML diagrams in the proposal:
-- Event classes → event hierarchy  
-- SimulationEngine → sequence diagram event loop  
-- Entities (Patient, Doctor) → UML class diagram  
-- Queue/Stats modules → system design components  
+* Discrete-event simulation engine
+* Configurable arrival rates, service times, and number of doctors
+* Multiple simulation runs with parameter sweeps
+* Automatic CSV data export
+* Time-series and summary statistics collection
+* Reproducible results using random seeds
+* Modular and well-documented Java codebase
 
 ---
 
-## 📁 Project Structure
+## 🧩 Modeling Assumptions
 
-```
-CS4632-ER/
+The simulation is based on the following assumptions:
+
+* Patients are homogeneous (no priority levels)
+* Patients are served on a **First-In, First-Out (FIFO)** basis
+* Each doctor can serve **one patient at a time**
+* Service times follow a **probabilistic distribution**
+* Patients do **not abandon** the queue
+* Doctors are continuously available during the simulation
+
+These assumptions simplify the system while preserving key ER dynamics.
+
+---
+
+## 🗂 Project Structure
+
+```text
+CS4632-ER-Simulation/
 │
 ├── src/
-│   └── main/java/ER/
-│       ├── ArrivalEvent.java
-│       ├── ServiceEvent.java
-│       ├── Patient.java
-│       ├── Doctor.java
-│       ├── Event.java
-│       ├── SimulationEngine.java
-│       ├── StatsCollector.java
-│       └── Main.java
+│   └── ER/
+│       ├── Main.java               # Entry point & batch run controller
+│       ├── SimulationEngine.java   # Core discrete-event simulation logic
+│       ├── Config.java             # Parameter configuration system
+│       ├── Patient.java            # Patient entity definition
+│       ├── Doctor.java             # Doctor resource model
+│       ├── Event.java              # Simulation event abstraction
+│       ├── RunResult.java           # Run-level results container
+│       └── CSVExporter.java         # CSV output utilities
 │
-├── classdiagram.png
-├── sequencediagram.png
-├── pom.xml
-└── README.md
+├── runs/                            # Simulation output directories
+│   ├── run_01/
+│   │   ├── summary.csv
+│   │   └── timeseries.csv
+│   ├── ...
+│   └── run_10/
+│
+├── README.md                        # Project documentation (this file)
+└── config.properties                # Optional configuration file
 ```
 
 ---
 
-## 🗂 Version Control Notes
+## ▶️ How to Run the Simulation
 
-This repository demonstrates:
-- Multiple incremental commits  
-- Clear commit messages  
-- Merge conflict resolution (`.gitignore`)  
-- Connected remote branch (`origin/main`)  
-- Organized folder structure  
+### Step 1: Open the Project
+
+1. Open **IntelliJ IDEA**
+2. Select **Open**
+3. Choose the project root directory (`CS4632-ER-Simulation`)
+
+### Step 2: Configure Java SDK
+
+1. Go to **File → Project Structure**
+2. Set **Project SDK** to **Java 21**
+
+### Step 3: Run the Simulation
+
+1. Open `Main.java`
+2. Right-click → **Run Main**
+
+The simulation will execute multiple runs and generate output files in the `runs/` directory.
 
 ---
+
+## 🔧 Configuring Simulation Parameters
+
+Simulation parameters are configured directly in `Main.java`.
+
+### Example Configuration
+
+```java
+configs.add(copy(base, 40, 3, 12, 103, "runs/run_03"));
+```
+
+### Parameter Order
+
+```text
+(arrivalRatePerHour, numberOfDoctors, serviceMeanMinutes, randomSeed, outputDirectory)
+```
+
+### Adjustable Parameters
+
+* **Arrival rate** (patients per hour)
+* **Number of doctors**
+* **Mean service time** (minutes)
+* **Random seed** (for reproducibility)
+
+These parameters allow exploration of different ER workload and staffing scenarios.
+
+---
+
+## 📊 Output Data
+
+Each simulation run generates two CSV files in its corresponding run directory:
+
+```text
+runs/run_XX/
+├── summary.csv
+```
+
+### Metrics Collected
+
+* Total patient arrivals
+* Total patient departures
+* Average waiting time
+* Average service time
+* Doctor busy time (utilization)
+
+These outputs support scenario comparison, visualization, and statistical analysis.
+
+---
+
+## 📈 Analysis & Validation (Milestone 4 Summary)
+
+### Sensitivity Analysis
+
+Three key parameters were analyzed:
+
+* Arrival rate
+* Number of doctors
+* Service time
+
+**Arrival rate** had the strongest impact on congestion and patient waiting times.
+
+### Scenario Testing
+
+The following scenarios were evaluated:
+
+* Baseline ER load
+* High-demand stress scenario
+* Low-resource scenario
+* Overstaffed scenario
+
+### Validation Methods
+
+Because the model is hypothetical, validation focused on **behavioral realism**:
+
+* Face validation (expected queue behavior)
+* Extreme-condition testing
+* Logical consistency checks
+
+---
+
+## 🎥 Milestone 5 – Video Demonstration
+
+A narrated demonstration video shows:
+
+* Live simulation execution
+* Parameter modifications
+* Output interpretation
+* Key analytical findings
+
+📎 **Video Link:** Provided in D2L submission
+
+---
+
+## 🧠 Key Findings
+
+* Higher arrival rates significantly increase patient wait times
+* Adding doctors reduces congestion but exhibits diminishing returns
+* Service time strongly affects system stability and throughput
+
+---
+
+## 🚀 Future Work
+
+Potential extensions to this project include:
+
+* Adding patient priority levels
+* Implementing time-varying arrival rates
+* Adding real-time visualization or a GUI
+* Incorporating patient abandonment behavior
+* Comparing results against real ER datasets
+
+---
+
+## 📌 Disclaimer
+
+This simulation represents a **hypothetical emergency room system** and is intended for **academic and educational purposes only**. It should not be used for real-world medical or operational decision-making.
+
+---
+
+## 📎 Repository
+
+The full source code, documentation are available in this public GitHub repository:
+
+**[https://github.com/ShennaT101/CS4632-Semester-Project-Emergency-Room-Simulation.git]**
