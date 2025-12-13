@@ -1,7 +1,6 @@
 package ER;
 
 public class ServiceEndEvent extends Event {
-
     private final Patient patient;
 
     public ServiceEndEvent(double time, Patient patient) {
@@ -11,9 +10,17 @@ public class ServiceEndEvent extends Event {
 
     @Override
     public void execute(SimulationEngine engine) {
-        System.out.println("Time " + time + ": Service ends for " + patient);
+        Doctor doc = patient.getAssignedDoctor();
+        patient.setServiceEnd(time);
+        engine.stats.recordServiceEnd(patient, patient.getServiceStart(), time);
 
-        // Schedule departure
+        if (doc != null) {
+            doc.setBusy(false, time);
+        }
+
+        System.out.printf("Time %.3f: Service end %s by %s%n", time, patient, doc);
+
+        // schedule departure
         engine.scheduleEvent(new DepartureEvent(time, patient));
     }
 }

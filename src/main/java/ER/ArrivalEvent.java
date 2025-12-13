@@ -6,9 +6,7 @@ public class ArrivalEvent extends Event {
 
     private static final Random rand = new Random();
 
-    public ArrivalEvent(double time) {
-        super(time);
-    }
+    public ArrivalEvent(double time) { super(time); }
 
     @Override
     public void execute(SimulationEngine engine) {
@@ -25,9 +23,9 @@ public class ArrivalEvent extends Event {
         Doctor freeDoc = engine.getFreeDoctor();
         if (freeDoc != null) {
 
-            freeDoc.setBusy(true);
+            freeDoc.setBusy(true, time);
             p.setAssignedDoctor(freeDoc);
-            p.setServiceStartTime(time);
+            p.setServiceStart(time);
 
             engine.stats.recordServiceStart(p, time);
 

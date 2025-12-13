@@ -1,54 +1,76 @@
 package ER;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StatsCollector {
     private int totalArrivals = 0;
-    private int totalServed = 0;
+    private int totalDepartures = 0;
 
-    private double totalWaitTime = 0;
-    private double totalServiceTime = 0;
+    private final List<Double> waitTimes = new ArrayList<>();
+    private final List<Double> serviceTimes = new ArrayList<>();
 
-    private List<Double> waitTimes = new ArrayList<>();
-    private List<Double> serviceTimes = new ArrayList<>();
+    // per-run doctor busy minutes
+    private final Map<String, Double> doctorBusy = new HashMap<>();
 
+    public void reset() {
+        totalArrivals = 0;
+        totalDepartures = 0;
+        waitTimes.clear();
+        serviceTimes.clear();
+        doctorBusy.clear();
+    }
 
-    // Called when patient arrives
     public void recordArrival(Patient p) {
         totalArrivals++;
     }
 
-    // Called when service begins
-    public void recordServiceStart(Patient p, double currentTime) {
-        double wait = currentTime - p.getArrivalTime();
+    public void recordServiceStart(Patient p, double startTime) {
+        double wait = startTime - p.getArrivalTime();
         waitTimes.add(wait);
-        totalWaitTime += wait;
     }
 
-    // Called when service finishes
     public void recordServiceEnd(Patient p, double startTime, double endTime) {
         double service = endTime - startTime;
         serviceTimes.add(service);
-        totalServiceTime += service;
-        totalServed++;
     }
 
-    // Called after simulation ends
+    public void recordDeparture(Patient p, double time) {
+        totalDepartures++;
+    }
+
+    public void addDoctorBusy(String doctorId, double minutes) {
+        doctorBusy.merge(doctorId, minutes, Double::sum);
+    }
+
+    // Called at end to print
     public void finalizeStats() {
-        System.out.println("---- Simulation Summary ----");
-        System.out.println("Total Arrivals: " + totalArrivals);
-        System.out.println("Total Served: " + totalServed);
+        double avgWait = waitTimes.stream().mapToDouble(d -> d).average().orElse(0.0);
+        double avgService = serviceTimes.stream().mapToDouble(d -> d).average().orElse(0.0);
 
-        if (totalServed > 0) {
-            System.out.println("Average Wait Time: " + (totalWaitTime / totalServed));
-            System.out.println("Average Service Time: " + (totalServiceTime / totalServed));
-        }
+        System.out.println("---- Simulation Summary ----");
+        System.out.println("Total arrivals: " + totalArrivals);
+        System.out.println("Total departures: " + totalDepartures);
+        System.out.printf("Average wait: %.3f minutes%n", avgWait);
+        System.out.printf("Average service: %.3f minutes%n", avgService);
+        doctorBusy.forEach((k, v) -> System.out.printf("Doctor %s busy minutes: %.3f%n", k, v));
     }
 
-    // Accessors if needed for exporting CSV later
-    public int getTotalArrivals() { return totalArrivals; }
-    public int getTotalServed() { return totalServed; }
-    public double getAverageWaitTime() { return totalServed > 0 ? totalWaitTime / totalServed : 0; }
-    public double getAverageServiceTime() { return totalServed > 0 ? totalServiceTime / totalServed : 0; }
+    public Map<String,String> asSummaryMap() {
+        Map<String,String> m = new HashMap<>();
+        m.put("total_arrivals", Integer.toString(totalArrivals));
+        m.put("total_departures", Integer.toString(totalDepartures));
+        m.put("avg_wait", String.format("%.4f", waitTimes.stream().mapToDouble(d -> d).average().orElse(0.0)));
+        m.put("avg_service", String.format("%.4f", serviceTimes.stream().mapToDouble(d -> d).average().orElse(0.0)));
+        for (Map.Entry<String, Double> e : doctorBusy.entrySet()) {
+            m.put("doctor_"+e.getKey()+"_busy_minutes", String.format("%.3f", e.getValue()));
+        }
+        return m;
+    }
+
+    public double getAverageWaitSafe() {
+        return waitTimes.stream().mapToDouble(d -> d).average().orElse(0.0);
+    }
 }
