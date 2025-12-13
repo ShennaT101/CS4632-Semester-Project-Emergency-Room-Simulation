@@ -1,7 +1,7 @@
 total_arrivals,319
-avg_wait,48.7565
-doctor_D3_busy_minutes,0.000
-avg_service,14.9630
+avg_wait,46.8427
+doctor_D3_busy_minutes,476.003
+avg_service,14.9756
 doctor_D2_busy_minutes,476.384
 total_departures,94
 doctor_D1_busy_minutes,0.000
